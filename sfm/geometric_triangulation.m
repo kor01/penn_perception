@@ -1,14 +1,14 @@
-function [p3d] = geometric_triangulation(Rs, Cs, p2ds, initial, epsilon)
+function [p3d] = geometric_triangulation(rs, cs, p2ds, initial, epsilon)
 % solve geometric triangulation by levenberg_marquardt
 
 p3d = initial;
 
-res, jacob, cur_loss = estimate_jacob(Rs, Cs, p2ds, p3d);
+res, jacob, cur_loss = estimate_jacob(rs, cs, p2ds, p3d);
 
 while true
-    delta_x = (jacob' * jacob) / (jacob * res);
+    delta_x = (jacob' * jacob) \ (jacob * res);
     p3d = p3d - delta_x;
-    res, jacob, new_loss = estimate_jacob(Rs, Cs, p2ds, p3d);
+    res, jacob, new_loss = estimate_jacob(rs, cs, p2ds, p3d);
     if abs(new_loss - cur_loss) < epsilon
         break;
     end
