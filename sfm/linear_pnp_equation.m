@@ -8,7 +8,7 @@ if ~isempty(ret)
     return;
 end
 
-syms x y z u v;
+syms x y z u v real;
 
 p3d = [x y z 1]; p2d = [u v 1];
 

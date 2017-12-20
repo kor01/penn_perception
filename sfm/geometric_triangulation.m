@@ -52,7 +52,7 @@ p2d = sym('p2d_%d', [2, 1], 'real');
 R = sym('R%d', [3, 3], 'real');
 C = sym('C%d', [3, 1], 'real');
 
-proj = R * p3d + C; proj = proj(1:2) /proj(3);
+proj = R * (p3d - C); proj = proj(1:2) /proj(3);
 
 residue = proj - p2d;
 jacob = jacobian(residue, p3d);

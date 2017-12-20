@@ -1,4 +1,4 @@
-function [C, R] = LinearPnP(X, x, K)
+function [C, R, rc] = LinearPnP(X, x, K)
 %% LinearPnP
 % Getting pose from 2D-3D correspondences
 % Inputs:
@@ -34,5 +34,6 @@ R = u * vt'; sign = det(R);
 
 R = R * sign; C = (C / max_val) * sign;
 
+C = -R'*C;
 
 end

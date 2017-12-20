@@ -19,7 +19,6 @@ x2 = intrinsic_inverse(K, x2, false);
 
 % use the notation convention in projection model
 R1 = R1'; R2 = R2';
-C1 = -R1 * C1; C2 = -R2 * C2;
 
 sz = length(x1);
 
@@ -32,7 +31,7 @@ for i = 1:1:sz
     coeff1 = Vec2Skew(pt1) * R1';
     coeff2 = Vec2Skew(pt2) * R2';
     
-    b1 = -coeff1 * C1; b2 = -coeff2 * C2;
+    b1 = coeff1 * C1; b2 = coeff2 * C2;
     A = [coeff1(1:2, :); coeff2(1:2, :)];
     b = [b1(1:2); b2(1:2)];
     X(i, :) = (A'*A) \ (A' * b);
