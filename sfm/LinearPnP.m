@@ -14,22 +14,21 @@ function [C, R] = LinearPnP(X, x, K)
 % more numeically unstable, and thus it is better to calibrate the x values
 % before the computation of P then extract R and t directly
 
-homo_x = [x, ones(length(x), 1)];
-origin_x = (homo_x * inv(K)');
-
 gen = linear_pnp_equation();
 
 p = zeros(length(x) * 2, 12);
 
+x = intrinsic_inverse(K, x, true);
+
 for i = 1:1:length(x)
-    p(2*i - 1: 2*i, :) = gen(origin_x(i, :), X(i, :));
+    p(2*i - 1: 2*i, :) = gen(X(i, :), x(i, :));
 end
 
-[~, ~, vt] = svd(p); rc = reshape(vt(:, end), [4, 3]);
+[~, ~, vt] = svd(p); rc = reshape(vt(:, end), [3, 4]);
 
 R = rc(:, 1:3); C = rc(:, end);
 
-[u, d, vt] = svd(R); max_val = d(0, 0);
+[u, d, vt] = svd(R); max_val = d(1, 1);
 
 R = u * vt'; sign = det(R);
 

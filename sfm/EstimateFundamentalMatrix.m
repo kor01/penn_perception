@@ -13,11 +13,21 @@ gen = fundamental_mat_equation();
 p = zeros(length(x1), 9);
 
 for i = 1:1:length(x1)
-    p(i, :) = gen(x1(i, :), x2(i,:));
+    p(i, :) = gen(x1(i, :)', x2(i,:)');
 end
 
-[~, ~, vt] = svd(p);
+p_size = size(p);
 
-F = vt(:, end); F = reshape(F, [3 3]);
+first = p(1, :)
+
+[~, d, vt] = svd(p);
+
+F = vt(:, end)
+
+sm_valid = p(1, :) * F
+
+sm = sum(first .* F')
+
+%F = vt(:, end); F = reshape(F, [3 3]);
 
 end

@@ -24,9 +24,7 @@ coeffs2 = sym_sp2dense(coeffs2, vars2, vars);
 
 coeff = [coeffs1'; coeffs2'];
 
-fn = matlabFunction(coeff, 'Vars', [x y z u v]);
-
-fn = @(p2d, p3d) fn(p3d(1), p3d(2), p3d(3), p2d(1), p2d(2));
+fn = matlabFunction(coeff, 'Vars', {[x, y, z], [u, v]});
 
 ret = fn;
 

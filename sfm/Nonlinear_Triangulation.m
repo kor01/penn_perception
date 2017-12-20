@@ -8,43 +8,32 @@ function X = Nonlinear_Triangulation(K, C1, R1, C2, R2, C3, R3, x1, x2, x3, X0)
 % Outputs: 
 %     X - size (N x 3) matrix of refined point 3D locations 
 
-[loss1, grad1] = geometric_triangulation_equation(R1, C1);
-
-[loss2, grad2] = geometric_triangulation_equation(R2, C2);
-
-[loss3, grad3] = geometric_triangulation_equation(R3, C3);
-
 epsilon = 1e-4;
+
+r1_sz = size(R1)
+
+rs = zeros([size(R1), 3]);
+rs(:, :, 1) = R1; rs(:, :, 2) = R2; rs(:, :, 3) = R3;
+
+cs = zeros([3, size(C1)]);
+cs(:, 1) = C1; cs(:, 2) = C2; cs(:, 3) = C3;
+
+sz = length(X0); X = zeros(sz, 3);
+
+x1 = intrinsic_inverse(K, x1, true);
+x2 = intrinsic_inverse(K, x2, true);
+x3 = intrinsic_inverse(K, x3, true);
 
 for i = 1:1:length(X0)
     
+    x0 = X0(i, :);
+    p2ds = zeros(2, 3);
+    p2ds(:, 1) = x1(i, :); p2ds(:, 2) = x2(i, :); 
+    p2ds(:, 3) = x3(i, :);
     
+    x = geometric_triangulation(rs, cs, p2ds, x0, epsilon, 0.01);
+    X(i, :) = x;
     
 end
-
-
-end
-
-
-function optimize_levenberg_marquardt(
-loss1, grad1, loss2, grad2, loss3, grad3, x0, epsilon):
-    
-loss_value = (loss1(x0) + loss2(x0) + loss3(x0)) / 3;
-
-while true
-    
-    grad_val = (grad1(x0) + grad2(x0) + grad3(x0)) / 3;
-    lr = ()(grad_val' * grad_val)
-    
-    break;
-end
-
-
-end
-
-function multiple_eval(x, fns, dim):
-
-    for i=1:1:length(fns):
-        
 
 end

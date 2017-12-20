@@ -8,22 +8,25 @@ if ~isempty(ret)
     return
 end
 
-syms x11 x12 x21 x22;
-
-x1 = [x11 x12 1]; x2 = [x21 x22 1];
-
-fund_mat = sym('F%d', [3, 3]);
+x2 = sym('x2_%d', [2, 1], 'real');
+x1 = sym('x1_%d', [2, 1], 'real');
+fund_mat = sym('F%d', [3, 3], 'real');
 
 vars = fund_mat(:);
 
-equation = x2 * fund_mat * x1';
+size([x2', 1])
+size([x1; 1])
+
+x2_homo = [x2; 1];
+x1_homo = [x1; 1];
+
+equation = x2_homo' * fund_mat * x1_homo;
 
 coeff = coeffs(equation, vars);
 
-fn = matlabFunction(coeff, 'Vars', [x11, x12, x21, x22]);
+reshape(vars, [3, 3])
 
-fn = @ (v1, v2) fn(v1(1), v1(2), v2(1), v2(2));
-
+fn = matlabFunction(coeff, 'Vars', {x1, x2});
 ret = fn;
 
 end

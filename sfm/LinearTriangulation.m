@@ -14,16 +14,26 @@ function X = LinearTriangulation(K, C1, R1, C2, R2, x1, x2)
 %     X - size (N x 3) matrix whos rows represent the 3D triangulated
 %       points
 
-inv_kt = inv(K');
+x1 = intrinsic_inverse(K, x1, false);
+x2 = intrinsic_inverse(K, x2, false);
 
-x1 = x1 * inv_kt; x2 = x2 * inv_kt;
+% use the notation convention in projection model
+R1 = R1'; R2 = R2';
+C1 = -R1 * C1; C2 = -R2 * C2;
 
-coeff1 = Vec2Skew(x1) * R1'; coeff1 = coeff1(1:2, :);
-coeff2 = Vec2Skew(x2) * R2'; coeff2 = coeff2(1:2, :);
+sz = length(x1);
 
-b1 = R1'*C1; b2 = R2'*C2;
+X = zeros([sz, 3]);
 
-A = [coeff1; coeff2];
-
-X = (A'*A) \ (A' * [b1; b2]);
-
+for i = 1:1:sz
+    
+    pt1 = x1(i, :); pt2 = x2(i, :);
+    
+    coeff1 = Vec2Skew(pt1) * R1';
+    coeff2 = Vec2Skew(pt2) * R2';
+    
+    b1 = -coeff1 * C1; b2 = -coeff2 * C2;
+    A = [coeff1(1:2, :); coeff2(1:2, :)];
+    b = [b1(1:2); b2(1:2)];
+    X(i, :) = (A'*A) \ (A' * b);
+end
