@@ -1,4 +1,4 @@
-function F = EstimateFundamentalMatrix(x1, x2)
+function [F, FA] = EstimateFundamentalMatrix(x1, x2)
 %% EstimateFundamentalMatrix
 % Estimate the fundamental matrix from two image point correspondences 
 % Inputs:
@@ -22,12 +22,6 @@ first = p(1, :)
 
 [~, d, vt] = svd(p);
 
-F = vt(:, end)
-
-sm_valid = p(1, :) * F
-
-sm = sum(first .* F')
-
-%F = vt(:, end); F = reshape(F, [3 3]);
+FA = vt(:, end); F = reshape(FA, [3 3]);
 
 end
